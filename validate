@@ -7,7 +7,8 @@
 #
 # Note: this script relies on `visDQMUpload` and `visDQMUtils.py` being available in the same directory.
 # If they are missing they are automatically downloaded from https://github.com/rovere/dqmgui/ .
-
+PRS=$@
+echo "$PRS"
 # Local configuration - should go before the others
 source local.sh
 
@@ -26,6 +27,7 @@ source input.sh
 # Validation scripts
 source validate.sh
 
+echo "halo"
 # Hash of this script and its configuration
 SCRIPTHASH=$(cat $VALIDATION/*.sh ${BASH_SOURCE[0]} | sha1sum | cut -d' ' -f1)
 
@@ -38,10 +40,12 @@ REPORT=$BASE/report.md
 # save the original file descriptors, then redirect all output and errors to a log file
 exec 3>&1 4>&2
 exec &> $BASE/log
-
+echo "prova"
 # main
 echo > $REPORT
 
+# consider only PRs (not issues)
+#PRS=$(filter_PRs "$@")
 # upload the report to the last PR given on the command line
 for ISSUE_NUMBER in "$@"; do true; done
 
@@ -65,7 +69,10 @@ DIRECTORIES+=" development"
 upload_report $ISSUE_NUMBER $COMMENT_ID
 
 # consider only PRs (not issues)
-PRS=$(filter_PRs "$@")
+#PR=$(filter_PRs "$@")
+#PRS=$("S@")
+#echo"PRAJDOAJ"
+echo $PRS
 
 # set up the development branch plus the PR(s) to be tested
 if [ "$PRS" ]; then

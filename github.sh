@@ -1,9 +1,9 @@
 # Determine GitHub-related capabilities
 
 #OAUTH_FILE from local.sh
-OAUTH_TOKEN=
-POST_COMMENT=true
-EDIT_COMMENT=true
+OAUTH_TOKEN=73bcca8f8ac1ebcc9b2cf7b09d5c6fc0c8d2bad6
+POST_COMMENT=false
+EDIT_COMMENT=false
 
 # repository with the working branch and pull requests
 REPOSITORY=cms-patatrack
@@ -57,7 +57,7 @@ function post_comment() {
   can_post_comment $ISSUE_NUMBER || return
   local BODY="$2"       # body of the message, wrapped in JSON format (see https://developer.github.com/v3/issues/comments/ )
   local RESPONSE
-  if ! RESPONSE=$(curl -s -S -H "Authorization: token $OAUTH_TOKEN" -X "POST" "https://api.github.com/repos/cms-patatrack/cmssw/issues/$ISSUE_NUMBER/comments" -d "$BODY"); then
+  if ! RESPONSE=$(curl -s -S -H "Authorization: token $OAUTH_TOKEN" -X "POST" "https://api.github.com/repos/cms-patatrack/cmssw/issues/$ISSUE_NUMBER/comments" -d "$BODY"); then 
     # failed; disable further posting
     POST_COMMENT=false
     EDIT_COMMENT=false
