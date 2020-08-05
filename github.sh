@@ -8,6 +8,9 @@ EDIT_COMMENT=true
 # repository with the working branch and pull requests
 REPOSITORY=cms-patatrack
 
+#validation trigger
+VAL_TRIGGER="Validate on $(uname -n)"
+
 # OAuth token to post comments on GitHub
 if [ "$OAUTH_FILE" ] && [ -f "$OAUTH_FILE" ]; then
   OAUTH_TOKEN=$(< "$OAUTH_FILE")
@@ -138,3 +141,27 @@ function filter_PRs() {
     fi
   done
 }
+
+function list_PRs(){
+
+  all_issues=$(curl -s -S -H "Authorization: token $OAUTH_TOKEN" -X "GET" "https://api.github.com/repos/cms-patatrack/cmssw/issues" | grep -oP 'number": \w+' | sed 's/number\": //g')
+  echo $all_issues
+  local PR=
+  for PR in $all_issues; do
+   if is_PR $PR; then
+     echo $PR
+   fi
+  done
+}
+
+function is_Triggered(){
+ local PR="$1"
+  # check for a numerical (decimal) value
+  [ "$(echo "$PR" | sed -e's/^[1-9][0-9]*//')" ] && return 1
+  # check for a valid issue which is also a pull request
+  curl -s -S -H "Authorization: token $OAUTH_TOKEN" -X "GET" "https://api.github.com/repos/cms-patatrack/cmssw/issues/$PR/comments" | grep -q "$VAL_TRIGGER"
+}
+
+
+
+
