@@ -6,13 +6,13 @@ export SCRAM_ARCH=slc7_amd64_gcc820
 source $VO_CMS_SW_DIR/cmsset_default.sh
 
 # Reference release
-REFERENCE_RELEASE=CMSSW_11_2_0_pre2
+REFERENCE_RELEASE=CMSSW_11_2_0_pre7
 
 # Development branch and latest release
 #DEVELOPMENT_BRANCH=master
-#DEVELOPMENT_RELEASE=CMSSW_11_0_0
+#DEVELOPMENT_RELEASE=CMSSW_11_2_0_pre7
 DEVELOPMENT_BRANCH=CMSSW_11_2_X_Patatrack
-DEVELOPMENT_RELEASE=CMSSW_11_2_0_pre2_Patatrack
+DEVELOPMENT_RELEASE=CMSSW_11_2_0_pre7_Patatrack
 
 # Number of threads and streams used in each job
 THREADS=8
@@ -20,21 +20,22 @@ STREAMS=8
 
 # runTheMatrix MC workflows (Run 3, 2021 relistic conditions)
 REFERENCE_WORKFLOW="11634.5"
-WORKFLOWS="11634.5 11634.501 11634.502 11634.511 11634.512 11634.521 11634.522"
-
+WORKFLOWS="11634.5 11634.501 11634.502 11634.505 11634.506 11634.511 11634.512 11634.521 11634.522"
+PIXEL_GPU_WORKFLOWS="11634.502 11634.501"
+PIXEL_CPU_WORKFLOWS="11634.506 11634.505"
 # runTheMatrix data Workflows (Run 2, 2018)
 DATA_WORKFLOWS="136.885502 136.885512 136.885522"
 
 # Enable validation selected workflows
-PIXEL_VALIDATION="11634.5 11634.501 11634.502"
+PIXEL_VALIDATION="11634.5 11634.501 11634.502 11634.505 11634.506"
 ECAL_VALIDATION=""
 HCAL_VALIDATION=""
 VALIDATE="$PIXEL_VALIDATION $ECAL_VALIDATION $HCAL_VALIDATION"
 
 # Enable profiling for selected workflows
-PIXEL_PROFILING="11634.502 136.885502"
-PIXEL_PROFILING_FILE=RecoPixelVertexing/Configuration/customizePixelTracksForProfiling
-PIXEL_PROFILING_FUNC=customizePixelTracksForProfilingGPUOnly
+PIXEL_PROFILING="11634.502 11634.506 136.885502"
+PIXEL_PROFILING_FILE=RecoTracker/Configuration/customizePixelOnlyForProfiling
+PIXEL_PROFILING_FUNC=customizePixelOnlyForProfilingGPUOnly
 ECAL_PROFILING="11634.512 136.885512"
 ECAL_PROFILING_FILE=RecoLocalCalo/Configuration/customizeEcalOnlyForProfiling
 ECAL_PROFILING_FUNC=customizeEcalOnlyForProfilingGPUOnly
@@ -44,7 +45,7 @@ HCAL_PROFILING_FUNC=customizeHcalOnlyForProfilingGPUOnly
 PROFILING="$PIXEL_PROFILING $ECAL_PROFILING $HCAL_PROFILING"
 
 # Enable memcheck for selected workflows
-MEMCHECKS="11634.502 11634.512 11634.522"
+MEMCHECKS="11634.502 11634.506 11634.512 11634.522"
 
 # Default number of events (overridden with sample-specific values in input.sh)
 NUMEVENTS=100
@@ -83,7 +84,7 @@ function setup_release() {
   echo
 
   # <add here any required pull request or external update>
-  git cms-merge-topic 30339
+  #git cms-merge-topic ...
 
   git rev-parse --short=12 HEAD > ../hash
   # check if there are any differences with respect to the base release
@@ -147,4 +148,3 @@ function clone_release() {
   git config --local commit.gpgsign false
   echo
 }
-
