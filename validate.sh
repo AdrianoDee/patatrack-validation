@@ -547,7 +547,7 @@ function make_gpucpu_plots() {
       local PULLDIR=${CPU_WORKFLOW}_vs_${GPU_WORKFLOW}
       mkdir -p $LOCAL_DIR/$JOBID/$WORKDIR/$PULLDIR
 
-      if has_pixel_validation $GPU_WORKFLOW && has_pixel_validation $CPU_WORKFLOW && then
+      if  has_pixel_validation $GPU_WORKFLOW  &&  has_pixel_validation $CPU_WORKFLOW;  then
         # other workflows
         local FILES=""
         local RELEASE
