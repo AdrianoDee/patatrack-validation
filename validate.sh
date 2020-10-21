@@ -318,59 +318,59 @@ function run_workflow() {
   fi
 
   # (optional) run profile
-  if [ -f profile.py ]; then
-    echo -n "# running profile... "
-    #if nvprof -f -o profile.nvvp -s --log-file profile.profile -- cmsRun profile.py >& profile.log; then
-    if cmsRun profile.py >& profile.log; then
-      echo "done"
-      touch profile.done
-    else
-      echo "failed"
-      tail profile.log
-      touch profile.fail
-    fi
-    if [ -f .scan_profile ] && ! [ -f profile.fail ]; then
-      echo -n "# scanning profile... "
-      $BASE/patatrack-scripts/scan profile.py
-    fi
-  fi
-
-  # (optional) run cuda-memcheck
-  if [ -f memcheck.py ]; then
-    # initcheck
-    echo -n "# running cuda-memcheck --tool initcheck... "
-    if cuda-memcheck --tool initcheck --error-exitcode 127 $SYNCCHECK_OPTS --log-file initcheck.out -- cmsRun memcheck.py >& initcheck.log; then
-      [ -f initcheck.log ] && cat initcheck.log | c++filt -i > demangled && mv demangled initcheck.log
-      echo "done"
-      touch cuda-initcheck.done
-    else
-      echo "failed"
-      tail initcheck.out
-      touch cuda-initcheck.fail
-    fi
-    # memcheck
-    echo -n "# running cuda-memcheck --tool memcheck... "
-    if cuda-memcheck --tool memcheck --error-exitcode 127 $MEMCHECK_OPTS --log-file memcheck.out -- cmsRun memcheck.py >& memcheck.log; then
-      [ -f memcheck.log ] && cat memcheck.log | c++filt -i > demangled && mv demangled memcheck.log
-      echo "done"
-      touch cuda-memcheck.done
-    else
-      echo "failed"
-      tail memcheck.out
-      touch cuda-memcheck.fail
-    fi
-    # synccheck
-    echo -n "# running cuda-memcheck --tool synccheck... "
-    if cuda-memcheck --tool synccheck --error-exitcode 127 $SYNCCHECK_OPTS --log-file synccheck.out -- cmsRun memcheck.py >& synccheck.log; then
-      [ -f synccheck.log ] && cat synccheck.log | c++filt -i > demangled && mv demangled synccheck.log
-      echo "done"
-      touch cuda-synccheck.done
-    else
-      echo "failed"
-      tail synccheck.out
-      touch cuda-synccheck.fail
-    fi
-  fi
+  # if [ -f profile.py ]; then
+  #   echo -n "# running profile... "
+  #   #if nvprof -f -o profile.nvvp -s --log-file profile.profile -- cmsRun profile.py >& profile.log; then
+  #   if cmsRun profile.py >& profile.log; then
+  #     echo "done"
+  #     touch profile.done
+  #   else
+  #     echo "failed"
+  #     tail profile.log
+  #     touch profile.fail
+  #   fi
+  #   if [ -f .scan_profile ] && ! [ -f profile.fail ]; then
+  #     echo -n "# scanning profile... "
+  #     $BASE/patatrack-scripts/scan profile.py
+  #   fi
+  # fi
+  #
+  # # (optional) run cuda-memcheck
+  # if [ -f memcheck.py ]; then
+  #   # initcheck
+  #   echo -n "# running cuda-memcheck --tool initcheck... "
+  #   if cuda-memcheck --tool initcheck --error-exitcode 127 $SYNCCHECK_OPTS --log-file initcheck.out -- cmsRun memcheck.py >& initcheck.log; then
+  #     [ -f initcheck.log ] && cat initcheck.log | c++filt -i > demangled && mv demangled initcheck.log
+  #     echo "done"
+  #     touch cuda-initcheck.done
+  #   else
+  #     echo "failed"
+  #     tail initcheck.out
+  #     touch cuda-initcheck.fail
+  #   fi
+  #   # memcheck
+  #   echo -n "# running cuda-memcheck --tool memcheck... "
+  #   if cuda-memcheck --tool memcheck --error-exitcode 127 $MEMCHECK_OPTS --log-file memcheck.out -- cmsRun memcheck.py >& memcheck.log; then
+  #     [ -f memcheck.log ] && cat memcheck.log | c++filt -i > demangled && mv demangled memcheck.log
+  #     echo "done"
+  #     touch cuda-memcheck.done
+  #   else
+  #     echo "failed"
+  #     tail memcheck.out
+  #     touch cuda-memcheck.fail
+  #   fi
+  #   # synccheck
+  #   echo -n "# running cuda-memcheck --tool synccheck... "
+  #   if cuda-memcheck --tool synccheck --error-exitcode 127 $SYNCCHECK_OPTS --log-file synccheck.out -- cmsRun memcheck.py >& synccheck.log; then
+  #     [ -f synccheck.log ] && cat synccheck.log | c++filt -i > demangled && mv demangled synccheck.log
+  #     echo "done"
+  #     touch cuda-synccheck.done
+  #   else
+  #     echo "failed"
+  #     tail synccheck.out
+  #     touch cuda-synccheck.fail
+  #   fi
+  # fi
 
   cd $BASE
 }
@@ -537,13 +537,15 @@ function make_gpucpu_plots() {
       done
     done
 
+    local GPU_WFS=($PIXEL_GPU_WORKFLOWS)
+    local CPU_WFS=($PIXEL_CPU_WORKFLOWS)
     # validation of all workflows across all releases
-    local NUMWFS=${#PIXEL_GPU_WORKFLOWS[@]}
+    local NUMWFS=${#GPU_WFS[@]}
     local I
     for I in `seq 1 $NUMWFS`; do
 
-      GPU_WORKFLOW=${PIXEL_GPU_WORKFLOWS[$I-1]}
-      CPU_WORKFLOW=${PIXEL_CPU_WORKFLOWS[$I-1]}
+      GPU_WORKFLOW=${GPU_WFS[$I-1]}
+      CPU_WORKFLOW=${CPU_WFS[$I-1]}
       local PULLDIR=${CPU_WORKFLOW}_vs_${GPU_WORKFLOW}
       mkdir -p $LOCAL_DIR/$JOBID/$WORKDIR/$PULLDIR
 
