@@ -565,7 +565,7 @@ function make_gpucpu_plots() {
             --html-validation-name $DATASET \
             --outputDir $LOCAL_DIR/$JOBID/$WORKDIR/$PULLDIR \
             $FILES
-          report "  - tracking validation [plots]($UPLOAD_URL/$JOBID/$WORKDIR/$PULLDIR/index.html) and [summary]($UPLOAD_URL/$JOBID/$WORKDIR/$WORKFLOW/plots_summary.html) for workflows $GPU_WORKFLOW and $CPU_WORKFLOW"
+          report "  - tracking validation [plots]($UPLOAD_URL/$JOBID/$WORKDIR/$PULLDIR/index.html) and [summary]($UPLOAD_URL/$JOBID/$WORKDIR/$PULLDIR/plots_summary.html) for workflows $GPU_WORKFLOW and $CPU_WORKFLOW"
         else
           report "  - :warning: tracking validation plots and summary for workflows $GPU_WORKFLOW and $CPU_WORKFLOW are **missing**"
         fi
